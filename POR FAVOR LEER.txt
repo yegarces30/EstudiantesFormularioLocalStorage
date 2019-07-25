@@ -2,10 +2,10 @@ Hola.
 
 A continuación indico aspectos que se adicionar al proyecto:
 
-1. El sistema usa cookies, por lo tanto se debe probar en un servidor XAMPP, WAMP, ISS, entre otros.
+1. El sistema usa LocalStorage
 
-2. Se uso Git como el sstema de control de versiones.
-la dirección del proyecto es https://github.com/yegarces30/estudiantesFormulario
+2. Se uso Git como el sistema de control de versiones.
+la dirección del proyecto es https://github.com/yegarces30/EstudiantesFormularioLocalStorage
 
 3. Debido a que estoy aprendiendo Bootstrap en la certificación de Desarrollo Web, he decidido usarlo 
 en el proyecto, por lo tanto, encontrará estilos propios de este framework css.
@@ -14,13 +14,7 @@ en el proyecto, por lo tanto, encontrará estilos propios de este framework css.
 
 5. Se desarrollaron mas operaciones, fuera del Promedio, tales como sumatoria y productoria.
 
-6. Aunque el el trabajo indica que los registros se deben guardar en un objeto JSON para ser operado, 
-considere que la información se debía guardar en una cookie, con el fin de trabajar lo aprendido sobre cookies,
-luego se obtiene la información y se convierte en un objeto JSON para ser operado.
-
-7. El sistema no solo adiciona registros, sino que también permite modificar y eliminar registros.
-
-8. Los botones mayor nota y menor nota, no solo muestran un popup con la informacion, sino que también genera una 
+6. Los botones mayor nota y menor nota, no solo muestran un popup con la informacion, sino que también genera una 
 animación en las filas de la tabla de registros, esto con el fin de trabajar en lo aprendido sobre las funciones de tiempo.
 
 
