@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <meta name='mobile-web-app-capable' content='yes'>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/estilos.css" >
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js" ></script>
+    <script src='js/javascript.js'></script>
+    <title>Asignación de notas</title>
+  </head>
+  <body onload="cargarPagina()">
+    <div class='container'>
+      <div class='row '>
+        <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+          <form role='Form'>
+            <fieldset>
+              <div id="div_formulario" class='form-group border border-primary rounded'>
+                <legend class='user_data'>Datos del estudiante</legend>
+                <div class=' row form-group text-center'>
+                  <div class='col-xs-12 col-sm-4 col-md-3 col-lg-3 text-left'>
+                    <label for="codigo">Código:</label>
+                  </div>
+                  <div class='col-xs-12 col-sm-8 col-md-9 col-lg-9'>
+                   <input  type='text' name='codigo' id='codigo' placeholder='Código del estudiante' class='form-control input-element' required />
+                  </div>
+                </div>
+
+                <div class=' row form-group text-center'>
+                  <div class='col-xs-12 col-sm-4 col-md-3 col-lg-3 text-left'>
+                    <label for="nombre">Nombre:</label>
+                  </div>
+                 <div class='col-xs-12 col-sm-8 col-md-9 col-lg-9'>
+                  <input type='text' name='nombre' id='nombre' placeholder='Nombre del estudiante' class='form-control input-element' required />
+                 </div>
+               </div>
+
+               <div class=' row form-group text-center'>
+                  <div class='col-xs-12 col-sm-4 col-md-3 col-lg-3 text-left'>
+                    <label for="materia">Materia:</label>
+                  </div>
+                  <div class='col-xs-12 col-sm-8 col-md-9 col-lg-9'>
+                    <select name='materia' id='materia' class='form-control input-element'>
+                      <option value="Ciencias sociales">Ciencias sociales</option>
+                      <option value="Español">Español</option>
+                      <option value="Inglés">Inglés</option>
+                      <option value="Matemáticas">Matemáticas</option>
+                      <option value="Química">Química</option>
+                    </select>
+                  </div>
+                </div>
+
+               <div class=' row form-group text-center'>
+                  <div class='col-xs-12 col-sm-4 col-md-3 col-lg-3 text-left'>
+                    <label for="nota">Nota:</label>
+                  </div>
+                  <div class='col-xs-12 col-sm-8 col-md-9 col-lg-9'>
+                   <input type='number' name='nota' id='nota' placeholder='Nota del estudiante' class='form-control input-element' min="0" max="5" step="0.1" required />
+                  </div>
+                </div>
+
+                <div class=' row form-group text-center'>
+                   <div class='col-xs-12 col-sm-4 col-md-3 col-lg-3 text-left'>
+                     <label for="observaciones">Observaciones:</label>
+                   </div>
+                   <div class='col-xs-12 col-sm-8 col-md-9 col-lg-9'>
+                    <textarea name='observaciones' id='observaciones' placeholder='Observaciones para el estudiante' class='form-control textarea-element'></textarea>
+                   </div>
+                 </div>
+
+                 <div class=' row '>
+                   <div class='col-xs-12 col-sm-6 col-md-3 col-lg-3 offset-md-9 offset-lg-9 offset-sm-6 '  >
+                     <button id='btnGuardar' type='submit' class=' btn btn-primary form-control '><img class="float-left"  src="images/guardar.png" alt=""> Guardar </img> </button>
+                     <input type="hidden" id="opcionGuardar" value="1">
+                   </div>
+                 </div>
+              </div>
+
+              <div class='form-group text-center'>
+                 <div class=' row form-group text-center'>
+                     <div class='col-xs-12 col-sm-6 col-md-3 col-lg-3 text-center'>
+                       <button id='btnNuevo' type='button' class=' btn btn-primary form-control'><img class=" float-left"  src="images/mas.png" alt=""> Nuevo </img> </button>
+                     </div>
+                     <div class='col-xs-12 col-sm-6 col-md-3 col-lg-3 text-center'>
+                       <button id='btnOperaciones' type='button' class=' btn btn-secondary form-control' ><img class=" float-left"  src="images/math.png" alt=""> Operaciones</img> </button>
+                     </div>
+                     <div class='col-xs-12 col-sm-6 col-md-3 col-lg-3 text-center'>
+                       <button id="btnMayor" type='button' class='btn btn-danger form-control'><img class=" float-left" src="images/arriba.png" alt=""> Mayor nota </img> </button>
+                     </div>
+                     <div class='col-xs-12 col-sm-6 col-md-3 col-lg-3 text-center' >
+                       <button id="btnMenor"  type='button' class='btn btn-dark form-control' ><img class=" float-left"  src="images/abajo.png" alt=""> Menor nota </img> </button>
+                     </div>
+                 </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div class='row '>
+        <div id="informacion1" class='col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive'></div>
+      </div>
+      <div class='row '>
+        <div id="informacion2" class='col-xs-12 col-sm-12 col-md-6 col-lg-6 table-responsive'></div>
+      </div>
+    </div>
+  </body>
+</html>
