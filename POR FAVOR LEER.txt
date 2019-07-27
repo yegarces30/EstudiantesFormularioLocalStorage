@@ -2,20 +2,14 @@ Hola.
 
 A continuación indico aspectos que se adicionar al proyecto:
 
-1. El sistema usa LocalStorage
+1. Se uso Git como el sstema de control de versiones.
+la dirección del proyecto es https://github.com/yegarces30/estudiantesJS
 
-2. Se uso Git como el sistema de control de versiones.
-la dirección del proyecto es https://github.com/yegarces30/EstudiantesFormularioLocalStorage
-
-3. Debido a que estoy aprendiendo Bootstrap en la certificación de Desarrollo Web, he decidido usarlo 
+2. Debido a que estoy aprendiendo Bootstrap en la certificación de Desarrollo Web, he decidido usarlo 
 en el proyecto, por lo tanto, encontrará estilos propios de este framework css.
 
 4. Gracias al framework de Bootstrap, encontrará que la página es responsive. 
 
-5. Se desarrollaron mas operaciones, fuera del Promedio, tales como sumatoria y productoria.
-
-6. Los botones mayor nota y menor nota, no solo muestran un popup con la informacion, sino que también genera una 
-animación en las filas de la tabla de registros, esto con el fin de trabajar en lo aprendido sobre las funciones de tiempo.
-
+3. Se desarrollaron mas operaciones, fuera del Promedio
 
 Muchas gracias.

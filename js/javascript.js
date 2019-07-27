@@ -3,122 +3,74 @@
   Esta parte del archivo contiene los métodos generales de la aplicación
 */
 
-
-/* obtenerCookie permite obtener  la información de una cookie en específico.
-Tiene como parametro nombre que indica el nombre de la cookie para traer la información*/
-
-function obtenerCookie(nombre) {
-   var nuevonombre = nombre + "=";
-   var verificar = document.cookie.split(';');
-   for (var i = 0; i < verificar.length; i++) {
-      var v = verificar[i];
-      while (v.charAt(0) == ' ') v = v.substring(1);
-      if (v.indexOf(nuevonombre) != -1) {
-         return v.substring(nuevonombre.length, v.length);
-      }
-   }
-   return "";
-}
-
-/* la función agregarCookie tiene como función crear o modificar una agregarCookie
-Tiene como parámetros, nombres que es el nombre de la cooikie, valor que corresponde al valor que se va a guardar en la cooikie
-y fecha que correspopnde a la cantidad de días de duración.*/
-
-function agregarCookie(nombre, valor, fecha) {
-   var f = new Date();
-   f.setTime(f.getTime() + (fecha * 24 * 60 * 60 * 1000));
-   var expiracion = "expiracion=" + f.toGMTString();
-   document.cookie = nombre + "=" + valor + "; " + expiracion;
-}
-
-
 /*La función limpiarCampos permite poner los campos en los valores por defecto*/
 
 function limpiarCampos(){
-  var codigo        = document.getElementById("codigo");
-  var nombre        = document.getElementById("nombre");
-  var materia       = document.getElementById("materia");
-  var nota          = document.getElementById("nota");
-  var observaciones = document.getElementById("observaciones");
-  var opcionGuardar = document.getElementById("opcionGuardar");
-
-  codigo.value = "";
-  codigo.disabled = false;
-  nombre.value = "";
-  materia.selectedIndex = "0";
-  nota.value = "";
-  observaciones.value = "";
-  opcionGuardar.value = "1";
-  window.scrollTo(0, 0);
+  $("#codigo").val("");
+  $("#codigo").attr("disabled",false);
+  $("#nombre").val("");
+  $("#materia").val("Ciencias sociales");
+  //$("#codigo").selectedIndex = "0";
+  $("#nota").val("");
+  $("#observaciones").val("");
+  $('html,body').animate({scrollTop: 0}, 1000);
 }
 
 /*La función mostrarRegistro permite ver la información del registro seleccionado para modificarlo en el formulario.
 Tiene como parámetro el campo codigo, el cual permite obtener la información en la cookie, convertirla en JSON y luego obtener
 los valores del registro seleccionado*/
 function mostrarRegistro(codigo){
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes != "" && cantidadEstudiantes != "0"){
-    var estudiantes = obtenerCookie("estudiantes")+"]}";
-    var objetoJson = JSON.parse(estudiantes);
 
-    for (var i=0;i<objetoJson.estudiantes.length;i++){
-        if(objetoJson.estudiantes[i].codigo == codigo){
-          var codigo        = document.getElementById("codigo");
-          var nombre        = document.getElementById("nombre");
-          var materia       = document.getElementById("materia");
-          var nota          = document.getElementById("nota");
-          var observaciones = document.getElementById("observaciones");
-          var opcionGuardar = document.getElementById("opcionGuardar");
-
-          codigo.value = objetoJson.estudiantes[i].codigo;
-          codigo.disabled = true;
-          nombre.value = objetoJson.estudiantes[i].nombre;
-          materia.value = objetoJson.estudiantes[i].materia;
-          nota.value = objetoJson.estudiantes[i].nota;
-          observaciones.value = objetoJson.estudiantes[i].observaciones;
-          opcionGuardar.value = "2";
-          window.scrollTo(0, 0);
-          break;
-        }
-    }
-  }
+  var estudiante = localStorage.getItem(codigo);
+  objetoJson = JSON.parse(estudiante);
+  $("#codigo").val(objetoJson.codigo);
+  $("#codigo").attr("disabled",true);
+  $("#nombre").val(objetoJson.nombre);
+  $("#materia").val(objetoJson.materia);
+  $("#nota").val(objetoJson.nota);
+  $("#observaciones").val(objetoJson.observaciones);
+  $('html,body').animate({scrollTop: 0}, 1000);
 }
 
 /*La función cargarPagina permite validar la existencia de la cookie y adicionar los eventos a los botones de las opcionrd principales*/
 function cargarPagina(){
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes == "" || cantidadEstudiantes == "0"){
-    agregarCookie("estudiantes",'{"estudiantes":[',30);
-    agregarCookie("cantidadEstudiantes","0",30);
-  }else{
-    listarEstudiantes();
-  }
+  listarEstudiantes();
 
   var btnGuardar        = document.getElementById("btnGuardar");
   btnGuardar.addEventListener("click",function(){guardar();});
 
-  var btnNuevo        = document.getElementById("btnNuevo");
+  btnNuevo        = document.getElementById("btnNuevo");
   btnNuevo.addEventListener("click",limpiarCampos);
 
-  var btnOperaciones        = document.getElementById("btnOperaciones");
+  btnOperaciones        = document.getElementById("btnOperaciones");
   btnOperaciones.addEventListener("click",obtenerOperaciones);
 
-  var btnMayor        = document.getElementById("btnMayor");
+  btnMayor        = document.getElementById("btnMayor");
   btnMayor.addEventListener("click",function (){obtenerNota(1);});
 
-  var btnMenor        = document.getElementById("btnMenor");
+  btnMenor        = document.getElementById("btnMenor");
   btnMenor.addEventListener("click",function (){obtenerNota(2);});
 }
+
+/*
+La funcion jsonACadena Convierte el objeto JSON en cadena
+*/
+function jsonACadena(){
+  var estudante = {
+    "codigo" : $.trim($("#codigo").val()),
+    "nombre" : $.trim($("#nombre").val()),
+    "materia" : $.trim($("#materia").val()),
+    "nota" : $.trim($("#nota").val()),
+    "observaciones" : $.trim($("#observaciones").val())
+  }
+  return JSON.stringify(estudante);
+}
+
 
 /*La función guardar permite guardar un registro nuevo o modificar un registro ya creado*/
 
 function guardar(){
-  var opcionGuardar = document.getElementById("opcionGuardar");
-  if(opcionGuardar.value == "1"){
-    adicionarEstudiante();
-  }else{
-    modificar();
-  }
+  adicionarModificarEstudiante();
   listarEstudiantes();
 }
 
@@ -131,10 +83,8 @@ function guardar(){
 guardados en la cookie*/
 
 function listarEstudiantes(){
-  var estudiantes = obtenerCookie("estudiantes")+"]}";
-  var objetoJson = JSON.parse(estudiantes);
 
-  var sTabla ="<table class='table table-striped table-bordered table-hover'><thead>"+
+  var sTabla ="<table id='listaEstudiantes' class='table table-striped table-bordered table-hover'><thead>"+
               "<tr><th scope='col'>#</th>"+
               "<th scope='col'>Cod</th>"+
               "<th scope='col'>Nombre</th>"+
@@ -145,16 +95,20 @@ function listarEstudiantes(){
               "<th scope='col'>Eliminar</th>"+
               "</thead><tbody>";
 
-  for (var i=0;i<objetoJson.estudiantes.length;i++){
-    sTabla += "<tr id='tr_"+objetoJson.estudiantes[i].codigo+"' ><td>"+(i+1)+"</td><td>"+objetoJson.estudiantes[i].codigo+"</td>" +
-              "<td>"+objetoJson.estudiantes[i].nombre+"</td>" +
-              "<td>"+objetoJson.estudiantes[i].materia+"</td>"+
-              "<td>"+objetoJson.estudiantes[i].nota+"</td>"+
-              "<td>"+objetoJson.estudiantes[i].observaciones+"</td>"+
-              "<td><button name='"+objetoJson.estudiantes[i].codigo+"' onclick='mostrarRegistro("+objetoJson.estudiantes[i].codigo+")' "+
+  for (var i = 0; i < localStorage.length; i++) {
+    var estudiante = localStorage[localStorage.key(i)]
+    objetoJson = JSON.parse(estudiante);
+    codigo = "'"+objetoJson.codigo + "'";
+
+    sTabla += "<tr id='tr_"+objetoJson.codigo+"'><td>"+(i+1)+"</td><td>"+codigo+"</td>" +
+              "<td>"+objetoJson.nombre+"</td>" +
+              "<td>"+objetoJson.materia+"</td>"+
+              "<td>"+objetoJson.nota+"</td>"+
+              "<td>"+objetoJson.observaciones+"</td>"+
+              "<td><button name='"+codigo+"' onclick=mostrarRegistro("+codigo+") "+
               "class='modificar btn btn-default btn-xs' >"+
               "<img  src='images/modificar.png' alt=''>  </img> </button></td>"+
-              "<td><button name='"+objetoJson.estudiantes[i].codigo+"' onclick='eliminar("+objetoJson.estudiantes[i].codigo+")' "+
+              "<td><button name='"+codigo+"' onclick=eliminar("+codigo+") "+
               "class='eliminar btn btn-default btn-xs' >"+
               "<img  src='images/eliminar.png' alt=''>  </img> </button></td></tr>";
   }
@@ -162,95 +116,30 @@ function listarEstudiantes(){
   sTabla +=  "</tbody></table>";
   sTabla = "<h5>Listado de estudiantes</h5>" + sTabla ;
 
-  document.getElementById('informacion1').innerHTML = sTabla;
+  $('#informacion1').html(sTabla);
 }
+
 
 /*La función adicionarEstudiante permite guardar un registro nuevo en la cookie*/
 
-function adicionarEstudiante(){
-  var codigo        = document.getElementById("codigo");
-  var nombre        = document.getElementById("nombre");
-  var materia       = document.getElementById("materia");
-  var nota          = document.getElementById("nota");
-  var observaciones = document.getElementById("observaciones");
+function adicionarModificarEstudiante(){
 
-  var estudiantes         = obtenerCookie("estudiantes");
-  var cantidadEstudiantes = parseInt(obtenerCookie("cantidadEstudiantes"),10);
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-
-  if(cantidadEstudiantes == 0 || cantidadEstudiantes == NaN){
-    agregarCookie("cantidadEstudiantes","1",30);
-  }else{
-    estudiantes +=",";
-  }
-  estudiantes +='{"codigo":"'+codigo.value.trim()+'",'+
-                '"nombre":"'+nombre.value.trim()+'",'+
-                '"materia":"'+materia.value.trim()+'",'+
-                '"nota":'+nota.value.trim()+','+
-                '"observaciones":"'+observaciones.value.trim()+'"}';
-  agregarCookie("estudiantes",estudiantes,30);
+  var estudiante = jsonACadena();
+  localStorage.setItem($("#codigo").val(),estudiante);
   alert("Nota del estudiante registrada con éxito.");
   limpiarCampos();
-}
-
-/*La función modificar permite obtener el registro para modificar y luego guardarlo en la cookie*/
-
-function modificar(){
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes != "" && cantidadEstudiantes != "0"){
-    var estudiantes = obtenerCookie("estudiantes")+"]}";
-    var objetoJson = JSON.parse(estudiantes);
-    var codigo        = document.getElementById("codigo");
-
-    for (var i=0;i<objetoJson.estudiantes.length;i++){
-        if(objetoJson.estudiantes[i].codigo == codigo.value){
-          var codigo        = document.getElementById("codigo");
-          var nombre        = document.getElementById("nombre");
-          var materia       = document.getElementById("materia");
-          var nota          = document.getElementById("nota");
-          var observaciones = document.getElementById("observaciones");
-          var opcionGuardar = document.getElementById("opcionGuardar");
-
-          objetoJson.estudiantes[i].codigo = codigo.value;
-          objetoJson.estudiantes[i].nombre = nombre.value;
-          objetoJson.estudiantes[i].materia = materia.value;
-          objetoJson.estudiantes[i].nota = nota.value;
-          objetoJson.estudiantes[i].observaciones = observaciones.value;
-          break;
-        }
-    }
-    estudiantes = JSON.stringify(objetoJson);
-    estudiantes = estudiantes.replace("]}","");
-    agregarCookie("estudiantes",estudiantes,30);
-    limpiarCampos();
-    alert("Registro modificado con éxito.");
-  }
 }
 
 /*La función eliminar permite liminar el registro seleccionado
 Tiene como parámetro la variable codigo, el cual contiene el codigo del registro a eliminar*/
 
 function eliminar(codigo){
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes != "" && cantidadEstudiantes != "0"){
-    var respuesta= confirm("¿Desea eliminar el registro seleccionado?");
-    if (respuesta){
-      var estudiantes = obtenerCookie("estudiantes")+"]}";
-      var objetoJson = JSON.parse(estudiantes);
 
-      for (var i=0;i<objetoJson.estudiantes.length;i++){
-          if(objetoJson.estudiantes[i].codigo == codigo){
-              objetoJson.estudiantes.splice(i,i);
-            break;
-          }
-      }
-
-      estudiantes = JSON.stringify(objetoJson);
-      estudiantes = estudiantes.replace("]}","");
-      agregarCookie("estudiantes",estudiantes,30);
-      limpiarCampos();
-      listarEstudiantes();
-    }
+  var respuesta = confirm("¿Desea eliminar el registro seleccionado?");
+  if (respuesta){
+    localStorage.removeItem(codigo);
+    limpiarCampos();
+    listarEstudiantes();
   }
 }
 
@@ -260,35 +149,34 @@ function eliminar(codigo){
 
 function obtenerOperaciones(){
   var sumatoria     = 0;
-  var promedio      = 0;
-  var producto      = 1
+  promedio      = 0;
+  producto      = 1
 
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes != "" && cantidadEstudiantes != "0"){
-    var estudiantes = obtenerCookie("estudiantes")+"]}";
-    var objetoJson = JSON.parse(estudiantes);
-
-    for (var i=0;i<objetoJson.estudiantes.length;i++){
-      var nota = parseFloat(objetoJson.estudiantes[i].nota);
+  if ( localStorage.length > 0) {
+    for (var i = 0; i < localStorage.length; i++) {
+      objetoJson = JSON.parse(localStorage[localStorage.key(i)]);
+      nota = parseFloat(objetoJson.nota);
       sumatoria += nota;
       producto *= nota;
-
-    }
-    if(objetoJson.estudiantes.length > 0){
-      promedio = sumatoria / objetoJson.estudiantes.length;
     }
 
-    var sTabla ="<table class='table table-striped table-bordered table-hover'>"+
-                "<tr><th>Suma</th><td>"+ sumatoria + "</td></tr>" +
-                "<tr><th>Promedio</th><td>"+ promedio + "</td></tr>" +
-                "<tr><th>Producto</th><td>"+ producto + "</td></tr>" +
-                "</table>" ;
-    sTabla =    "<h5>Operaciones</h5>" + sTabla ;
+    promedio = sumatoria / localStorage.length;
 
-    document.getElementById('informacion2').innerHTML = sTabla;
-    window.scrollTo(0, window.outerHeight);
+    var sTabla ="<table id='operaciones' class='table table-striped table-bordered table-hover' scope='col' colspan='2'><thead>";
+    sTabla += "<tr><th>Suma</th><td>"+ sumatoria + "</td></tr>";
+    sTabla += "<tr><th>Promedio</th><td>"+ promedio + "</td></tr>";
+    sTabla += "<tr><th>Producto</th><td>"+ producto + "</td></tr>";
+    sTabla += "</tbody></table>";
+    sTabla = "<h5>Operaciones</h5>" + sTabla ;
+
+    $('#informacion2').html(sTabla);
+    $('html,body').animate({scrollTop: $("#operaciones").offset().top}, 2000);
+
+  }else{
+    alert("No hay registros para operar");
   }
 }
+
 
 /********************************************************************************/
 /*Esta parte permite obtener las notas mayores y menores*/
@@ -301,39 +189,40 @@ En caso de recibir el valor de 1, la función mostrará la información de los e
 Se recorre el objeto JSON para obtener la información de las notas dependiendo del parámetro recibido
 para Luego mostrar la información usando animaciones y un popup de alert().
 */
+
 function obtenerNota(opcion){
-  var cantidadEstudiantes = obtenerCookie("cantidadEstudiantes");
-  if (cantidadEstudiantes != "" && cantidadEstudiantes != "0"){
-    var estudiantes = obtenerCookie("estudiantes")+"]}";
-    var objetoJson = JSON.parse(estudiantes);
-    var posiciones = [];
-    var nota = 0;
-    var informacion = "Los estudiantes con menor nota son:\n";
+  var posiciones = [];
+  nota = 0;
+  informacion = "Los estudiantes con menor nota son:\n";
 
-    if(objetoJson.estudiantes.length > 0)
-    {
-      nota = objetoJson.estudiantes[0].nota;
-    }
-    if(opcion == 1){
-      var informacion = "Los estudiantes con mayor nota son:\n";
-    }
+  if(opcion == 1){
+    var informacion = "Los estudiantes con mayor nota son:\n";
+  }
 
-    for (var i=0;i<objetoJson.estudiantes.length;i++){
+  $('html,body').animate({scrollTop: $("#listaEstudiantes").offset().top}, 1000);
+
+  if ( localStorage.length > 0) {
+    objetoJson = JSON.parse(localStorage[localStorage.key(i)]);
+    nota = parseFloat(objetoJson.nota);
+    for (var i = 0; i < localStorage.length; i++) {
+      objetoJson = JSON.parse(localStorage[localStorage.key(i)]);
+      notaCopia = parseFloat(objetoJson.nota);
       if(opcion == 1){
-        if(objetoJson.estudiantes[i].nota > nota){
-          nota  = objetoJson.estudiantes[i].nota;
+        if(notaCopia > nota){
+          nota = notaCopia;
         }
       }else{
-        if(objetoJson.estudiantes[i].nota < nota){
-          nota  = objetoJson.estudiantes[i].nota;
+        if(notaCopia < nota){
+          nota = notaCopia;
         }
       }
     }
 
-    for (var i=0;i<objetoJson.estudiantes.length;i++){
-      if(objetoJson.estudiantes[i].nota == nota){
-        posiciones.push(objetoJson.estudiantes[i].codigo);
-        informacion += objetoJson.estudiantes[i].nombre + "  con " + objetoJson.estudiantes[i].nota + " en la materia " + objetoJson.estudiantes[i].materia + "\n";
+    for (var i = 0; i < localStorage.length; i++) {
+      objetoJson = JSON.parse(localStorage[localStorage.key(i)]);
+      if(objetoJson.nota == nota){
+        posiciones.push(objetoJson.codigo);
+        informacion += objetoJson.nombre + "  con " + objetoJson.nota + " en la materia " + objetoJson.materia + "\n";
       }
     }
 
@@ -357,10 +246,7 @@ arregloCodigos: contiene el listado de códigos para modificar las filas de la t
 claseAdicionar: es el nombre de la clase css que se adicionará a la fila de la tabla.
 claseRemover: es el nombre de la clase css que se removerá de la fila de la tabla.*/
 function accionarClass(arregloCodigos, claseAdicionar, claseRemover){
-  console.log("se meti+o al accionar");
   for (var i=0;i<arregloCodigos.length;i++){
-    var fila = document.getElementById("tr_"+arregloCodigos[i]);
-    fila.classList.remove(claseRemover);
-    fila.classList.add(claseAdicionar);
+    $("#tr_"+arregloCodigos[i]).removeClass(claseRemover).addClass(claseAdicionar);
   }
 }
